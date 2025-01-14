@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0b0f13;
+  --foreground: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -18,4 +18,23 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  cursor: url('/cursor-circle-white.png') 6 6, crosshair;
+}
+
+/* Add custom cursor styles */
+.custom-cursor {
+  width: 20px;
+  height: 20px;
+  background: #aaaaaa;
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  transform: translate3d(50%, 50%, 0);
+  opacity: 0;
+  will-change: transform;
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.5s ease;
 }
