@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "@ai-sdk/openai": "1.0.18",
+    "@neodrag/react": "2.3.0",
     "@vercel/functions": "1.5.2",
     "ai": "4.0.34",
     "embla-carousel-react": "8.5.2",
     "embla-carousel-wheel-gestures": "8.0.1",
+    "install": "0.13.0",
     "next": "15.1.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

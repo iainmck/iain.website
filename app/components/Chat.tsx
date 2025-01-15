@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useChat, Message } from 'ai/react'
 import { useRouter } from 'next/navigation'
 import { usePathname } from 'next/navigation'
+import { useDraggable } from '@neodrag/react'
 
 const nameQuestions = ["what is your name?", "who are you?", "who's there?"]
 const options = ["to see your portfolio", "just to chat"]
@@ -18,6 +19,9 @@ export default function Chat({ className }: { className?: string }) {
   const isFirstMessage = useRef(true)
   const [isShowingOptions, setIsShowingOptions] = useState(false)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
+
+  const draggableRef = useRef<HTMLDivElement>(null)
+  useDraggable(draggableRef as React.RefObject<HTMLElement>, { bounds: 'parent' })
 
   const { messages, setMessages, input, handleInputChange, handleSubmit: originalHandleSubmit, isLoading } = useChat({
     api: '/api/chat',
@@ -138,12 +142,15 @@ export default function Chat({ className }: { className?: string }) {
   }, [messages]) // could also add showOptions if needed
 
   return (
-    <div className={`
+    <div ref={draggableRef} className={`
       ${className} bg-[#1e1e1e] rounded-[12px] border-[1px] border-[#999] shadow-[0_8px_6px_-1px_rgba(0,0,0,0.5)] 
       ${hideChat || initialLoad ? 'opacity-0 scale-[0.9] pointer-events-none' : 'opacity-100 scale-100'} transition-all duration-700 origin-center
       hidden md:block flex flex-col
     `}>
-      <div className="h-[30px] bg-[#36363B] rounded-t-[12px] border-b border-black flex relative">
+      <div className={`
+        h-[30px] bg-[#36363B] rounded-t-[12px] border-b border-black flex relative
+        drag-handle cursor-move
+      `}>
         <div className="absolute left-2 h-full flex items-center gap-2 group" onClick={() => setHideChat(true)}>
           <div className="w-[12px] h-[12px] rounded-full bg-[#FF5F57] group-hover:bg-[#ff8d88] cursor-pointer" />
           <div className="w-[12px] h-[12px] rounded-full bg-[#FFBD2E] group-hover:bg-[#ffd484] cursor-pointer" />

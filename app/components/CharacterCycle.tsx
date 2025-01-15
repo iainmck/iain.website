@@ -3,13 +3,13 @@
 import { memo, useRef, useEffect } from 'react'
 
 // Memoize the character array and cycle count
-const CHARS = ['@', '+', ' ', '.', '~', '%', '8'] as const;
-const CYCLE_COUNT = 7;
+const CHARS = ['@', '+', ' ', '.', '~', '%', '8'] as const
+const CYCLE_COUNT = 7
 
 interface CharacterCycleProps {
-  char: string;
-  shouldShiver: boolean;
-  colorize?: boolean;
+  char: string
+  shouldShiver: boolean
+  colorize?: boolean
 }
 
 // Memoize the CharacterCycle component
@@ -17,41 +17,45 @@ const CharacterCycle = memo(({ char, shouldShiver, colorize }: CharacterCyclePro
   const spanRef = useRef<HTMLSpanElement>(null);
   
   const triggerCycle = () => {
-    const span = spanRef.current;
-    if (!span) return;
+    const span = spanRef.current
+    if (!span) return
 
     let cycles = 0;
     const interval = setInterval(() => {
       if (cycles >= CYCLE_COUNT) {
-        span.textContent = char;
-        span.style.transform = 'scale(1)';
-        clearInterval(interval);
+        span.textContent = char
+        span.style.transform = 'scale(1)'
+        clearInterval(interval)
       } else {
-        span.textContent = CHARS[cycles % CHARS.length];
-        span.style.transform = 'scale(1.5)';
-        cycles++;
+        span.textContent = CHARS[cycles % CHARS.length]
+        span.style.transform = 'scale(1.5)'
+        cycles++
       }
-    }, 100);
-  };
+    }, 100)
+  }
 
   // Randomize the initial delay and interval for each character
   useEffect(() => {
     if (shouldShiver) {
-      const initialDelay = 0 //Math.random() * 2000; // Random delay 0-2s before first potential shiver
-      const intervalTime = 8000 + Math.random() * 500; // Random interval 1-3s between potential shivers
+      const initialDelay = Math.random() * 1000; // Random delay 0-2s before first potential shiver
+      const intervalTime = 5000 + Math.random() * 500; // Random interval 1-3s between potential shivers
       
       // Initial delay before starting the interval
       const startTimeout = setTimeout(() => {
+        if (Math.random() < 0.2) {
+          triggerCycle()
+        }
+
         const interval = setInterval(() => {
           if (Math.random() < 0.1) { // 10% chance to trigger
-            triggerCycle();
+            triggerCycle()
           }
-        }, intervalTime);
+        }, intervalTime)
         
-        return () => clearInterval(interval);
-      }, initialDelay);
+        return () => clearInterval(interval)
+      }, initialDelay)
       
-      return () => clearTimeout(startTimeout);
+      return () => clearTimeout(startTimeout)
     }
   }, [shouldShiver]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -64,8 +68,8 @@ const CharacterCycle = memo(({ char, shouldShiver, colorize }: CharacterCyclePro
     >
       {char}
     </span>
-  );
-});
+  )
+})
 
 CharacterCycle.displayName = 'CharacterCycle'
 

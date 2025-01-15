@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+
 import "./globals.css"
 import LoadingOverlay from "./components/LoadingOverlay"
 import { suisseMono, inter } from "./components/fonts"

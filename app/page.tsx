@@ -7,6 +7,8 @@ import { useState } from 'react';
 import Chat from './components/Chat';
 
 export default function Home() {
+  const [animationsEnabled, setAnimationsEnabled] = useState(false);
+
   return (
     <div className="h-full animate-fade-in">
       <div className="relative">
@@ -15,18 +17,21 @@ export default function Home() {
         <div className="mt-1 md:mt-10 -ml-[300px] md:ml-0 font-mono whitespace-pre overflow-hidden text-[6px] leading-[6px]">
           {asciiArt.split('\n').map((line, lineIndex) => (
             <div key={lineIndex}>
-              {line.split('').map((char, charIndex) => (
-                char === ' ' ? (
-                  <span key={`${lineIndex}-${charIndex}`}>&nbsp;</span>
-                ) : (
-                  <CharacterCycle 
-                    key={`${lineIndex}-${charIndex}`} 
-                    char={char} 
-                    shouldShiver={Math.random() < 0.01}
-                    //colorize={false}
-                  />
-                )
-              ))}
+              {animationsEnabled ? (
+                line.split('').map((char, charIndex) => (
+                  char === ' ' ? (
+                    <span key={`${lineIndex}-${charIndex}`}>&nbsp;</span>
+                  ) : (
+                    <CharacterCycle 
+                      key={`${lineIndex}-${charIndex}`} 
+                      char={char} 
+                      shouldShiver={Math.random() < 0.03}
+                    />
+                  )
+                ))
+              ) : (
+                line
+              )}
             </div>
           ))}
         </div>
@@ -50,9 +55,19 @@ export default function Home() {
         </div>
       </div>
       
-      <p className="fixed bottom-0 left-0 right-0 bg-background p-2 z-2 text-sm">
-        iain is not a developer. yeah he codes <Link href="/projects" className='font-bold'>fullstack apps</Link>. but he thinks bigger, about people, products, systems. what is success? how do we iteratively build & measure? is the product cool? and why are there two i&apos;s in his name? who knows. 
-      </p>
+      <div className="fixed bottom-0 left-0 right-0 bg-background p-2 z-2 flex items-end gap-4">
+        <p className="text-sm flex-grow">
+          iain is not a developer. yeah he codes <Link href="/projects" className='font-bold'>fullstack apps</Link>. but he thinks bigger, about people, products, systems. what is success? how do we iteratively build & measure? is the product cool? and why are there two i&apos;s in his name? who knows.
+        </p>
+        <button 
+          onClick={() => setAnimationsEnabled(!animationsEnabled)}
+          className={`${animationsEnabled ? 'bg-foreground text-background' : ''} 
+            opacity-30 bg-background border border-foreground px-3 py-1 rounded-full text-xs whitespace-nowrap hover:bg-foreground hover:text-background transition-colors
+          `}
+        >
+          sparkle
+        </button>
+      </div>
     </div>
   )
 }
