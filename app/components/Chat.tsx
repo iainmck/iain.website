@@ -5,6 +5,7 @@ import { useChat, Message } from 'ai/react'
 import { useRouter } from 'next/navigation'
 import { usePathname } from 'next/navigation'
 
+const nameQuestions = ["what is your name?", "who are you?", "who's there?"]
 const options = ["to see your portfolio", "just to chat"]
 const locationQuestions = ["how's the weather in", "what's up in", "how's the tech scene in", "are you enjoying"]
 
@@ -103,7 +104,7 @@ export default function Chat({ className }: { className?: string }) {
   // ON VIEW LOAD
   useEffect(() => {
     setTimeout(() => {
-      presentQuestion('what is your name?')
+      presentQuestion(nameQuestions[Math.floor(Math.random() * nameQuestions.length)])
     }, 2000)
   }, [])
 
