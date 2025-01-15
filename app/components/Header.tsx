@@ -19,10 +19,10 @@ export default function Header() {
         <h1 className="text-2xl md:text-3xl">iain mckenzie</h1>
       </Link>
 
-      {/* <nav className="gap-10 hidden md:flex">
+      <nav className="gap-10 hidden md:flex text-lg">
         <Link href="/projects" className={pathname === '/projects' ? 'underline' : ''}>projects</Link>
         <Link href="/music" className={pathname === '/music' ? 'underline' : ''}>music</Link>
-      </nav> */}
+      </nav>
     </header>
   )
 }

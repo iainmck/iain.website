@@ -2,11 +2,15 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { useChat, Message } from 'ai/react'
+import { useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 
 const options = ["to see your portfolio", "just to chat"]
 const locationQuestions = ["how's the weather in", "what's up in", "how's the tech scene in", "are you enjoying"]
 
-export default function Chat({ closeChat }: { closeChat: () => void }) {
+export default function Chat({ className }: { className?: string }) {
+  const router = useRouter()
+  const pathname = usePathname()
   const [name, setName] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const [isFakeLoading, setIsFakeLoading] = useState(false)
@@ -17,14 +21,17 @@ export default function Chat({ closeChat }: { closeChat: () => void }) {
     api: '/api/chat',
     onError: (error) => {
       console.error('Error in chat:', error)
-      setMessages([...messages, { id: String(Date.now()) + 'user', role: 'user', content: input }, { id: String(Date.now()) + 'assistant', role: 'assistant', content: 'Sorry... busy right now' }])
+      setMessages([...messages, { id: String(Date.now()) + 'user', role: 'user', content: input }, { id: String(Date.now()) + 'assistant', role: 'assistant', content: 'sorry... brb' }])
     },
     onFinish: (message, options) => {
       const didJustSendFirstMessage = isFirstMessage.current
       isFirstMessage.current = false
       
       if (didJustSendFirstMessage) {
-        presentQuestion('anyways, enough about you. why are you here?', ()=>setIsShowingOptions(true))
+        setIsFakeLoading(true)
+        setTimeout(() => {
+          presentQuestion('anyways, enough about you. why are you here?', ()=>setIsShowingOptions(true))
+        }, 2000)
       }
     },
   })
@@ -79,7 +86,7 @@ export default function Chat({ closeChat }: { closeChat: () => void }) {
     })
 
     if (index === 0) {
-      closeChat()
+      router.push('/projects')
     } else {
       setIsShowingOptions(false)
       setIsFakeLoading(true)
@@ -95,46 +102,66 @@ export default function Chat({ closeChat }: { closeChat: () => void }) {
 
   // ON VIEW LOAD
   useEffect(() => {
-    inputRef.current?.focus()
     setTimeout(() => {
-      presentQuestion('What is your name?')
+      presentQuestion('what is your name?')
     }, 2000)
   }, [])
 
+  const [hideChat, setHideChat] = useState(false)
+  useEffect(() => {
+    setHideChat(pathname !== '/')
+    if (pathname === '/') {
+      inputRef.current?.focus()
+    }
+  }, [pathname])
+
   return (
-    <div 
-      className="w-full h-full flex flex-col justify-start px-3 py-2 text-sm"
-      onClick={() => inputRef.current?.focus()}
-    >
-      <div>
-        {messages.map((m) => (
-          <div key={m.id} className="flex gap-2">
-            <NameBlock name={name} role={m.role} />
-            <p className="flex-grow whitespace-pre-wrap">
-              {m.content}
-            </p>
-          </div>
-        ))}
+    <div className={`${className} bg-[#1e1e1e] rounded-[12px] border-[1px] border-[#999] shadow-[0_8px_6px_-1px_rgba(0,0,0,0.5)] ${hideChat ? 'opacity-0 scale-[0.9] pointer-events-none' : 'opacity-100 scale-100'} transition-all duration-700 origin-center`}>
+      <div className="h-[30px] bg-[#36363B] rounded-t-[12px] border-b border-black flex relative">
+        <div className="absolute left-2 h-full flex items-center gap-2 group" onClick={() => setHideChat(true)}>
+          <div className="w-[12px] h-[12px] rounded-full bg-[#FF5F57] group-hover:bg-[#ff8d88] cursor-pointer" />
+          <div className="w-[12px] h-[12px] rounded-full bg-[#FFBD2E] group-hover:bg-[#ffd484] cursor-pointer" />
+          <div className="w-[12px] h-[12px] rounded-full bg-[#28C840] group-hover:bg-[#7de790] cursor-pointer" />
+        </div>
+        <div className="h-full flex-grow flex items-center justify-center">
+          <span className="text-[#ccc] text-sm font-sans font-bold">iain.website -- remote access</span>
+        </div>
       </div>
 
-      {isShowingOptions && <Options onSelect={handleSubmitOption} />}
-      
-      <form onSubmit={handleSubmit} className={`w-full ${(!messages.length || isLoading || isFakeLoading || isShowingOptions) ? 'opacity-0' : 'opacity-100'}`}>
-        <div className="w-full flex gap-2">
-          <NameBlock name={name} role="user" />
-          <input 
-            ref={inputRef}
-            className={"flex-grow"}
-            value={input} 
-            onChange={handleInputChange}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleSubmit(e)
-              }
-            }}
-          />
+      <div 
+        className="w-full h-full flex flex-col justify-start px-3 py-2 text-sm"
+        onClick={() => inputRef.current?.focus()}
+      >
+        <div>
+          {messages.map((m) => (
+            <div key={m.id} className="flex gap-2">
+              <NameBlock name={name} role={m.role} />
+              <p className="flex-grow whitespace-pre-wrap">
+                {m.content}
+              </p>
+            </div>
+          ))}
         </div>
-      </form>
+
+        {isShowingOptions && <Options onSelect={handleSubmitOption} />}
+        
+        <form onSubmit={handleSubmit} className={`w-full ${(!messages.length || isLoading || isFakeLoading || isShowingOptions) ? 'opacity-0' : 'opacity-100'}`}>
+          <div className="w-full flex gap-2">
+            <NameBlock name={name} role="user" />
+            <input 
+              ref={inputRef}
+              className={"flex-grow"}
+              value={input} 
+              onChange={handleInputChange}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSubmit(e)
+                }
+              }}
+            />
+          </div>
+        </form>
+      </div>
     </div>
   )
 }

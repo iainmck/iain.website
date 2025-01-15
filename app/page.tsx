@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { asciiArt } from './components/ascii'
 import CharacterCycle from './components/CharacterCycle';
 import { useState } from 'react';
+import Chat from './components/Chat';
 
 export default function Home() {
   const [isHovered, setIsHovered] = useState(false)
@@ -11,6 +12,8 @@ export default function Home() {
   return (
     <div className="h-full animate-fade-in">
       <div className="relative">
+
+        {/* ascii art */}
         <div className="mt-1 md:mt-10 -ml-[300px] md:ml-0 font-mono whitespace-pre overflow-hidden text-[6px] leading-[6px]">
           {asciiArt.split('\n').map((line, lineIndex) => (
             <div key={lineIndex}>
@@ -30,7 +33,8 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="absolute left-1/2 -translate-x-1/2 top-[20vh] md:top-1/3 z-2">
+        {/* mobile nav */}
+        <div className="absolute left-1/2 -translate-x-1/2 top-[20vh] md:top-1/3 z-2 block md:hidden">
           <nav className="flex gap-20 flex-col md:flex-row items-center">
             <Link 
               href="/projects" 

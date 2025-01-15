@@ -1,11 +1,12 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-//import Image from 'next/image'
+
+const loadIcons = ['|', '/', '—', '\\']
 
 export default function LoadingOverlay() {
   const [loading, setLoading] = useState(true)
-  const [currentImage, setCurrentImage] = useState(1)
+  const [index, setIndex] = useState(0)
   
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -15,8 +16,8 @@ export default function LoadingOverlay() {
     let imageInterval: NodeJS.Timeout | null = null;
     if (loading) {
       imageInterval = setInterval(() => {
-        setCurrentImage((prev) => (prev % 3) + 1)
-      }, 300)
+        setIndex((prev) => (prev + 1) % loadIcons.length)
+      }, 200)
     }
 
     return () => {
@@ -32,15 +33,7 @@ export default function LoadingOverlay() {
       }`}
     >
       <div className="flex flex-col items-center gap-4">
-        {/* <Image
-          src={`/avatars/avatar${currentImage}.png`}
-          width={126 * 0.5}
-          height={131 * 0.5}
-          alt={`Loading avatar ${currentImage}`}
-          priority
-          className="mr-5"
-        /> */}
-        <div className="text-foreground">getting ready{'.'.repeat(currentImage - 1)}</div>
+        <div className="text-foreground">getting ready {loadIcons[index]}</div>
       </div>
     </div>
   )

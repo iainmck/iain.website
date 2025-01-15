@@ -26,20 +26,7 @@ export default function ChatOverlay() {
         transition-all duration-1000 origin-center`
       }
     >
-      <div className="w-[800px] max-w-[80vw] h-[600px] max-h-[80vh] bg-[#1e1e1e] rounded-[12px] border-[1px] border-[#999] shadow-[0_8px_6px_-1px_rgba(0,0,0,0.5)] ml-[10vw] mt-[10vh]">
-        <div className="h-[30px] bg-[#36363B] rounded-t-[12px] border-b border-black flex relative">
-          <div className="absolute left-2 h-full flex items-center gap-2 group" onClick={() => doFadeOut()}>
-            <div className="w-[12px] h-[12px] rounded-full bg-[#FF5F57] group-hover:bg-[#ff8d88] cursor-pointer" />
-            <div className="w-[12px] h-[12px] rounded-full bg-[#FFBD2E] group-hover:bg-[#ffd484] cursor-pointer" />
-            <div className="w-[12px] h-[12px] rounded-full bg-[#28C840] group-hover:bg-[#7de790] cursor-pointer" />
-          </div>
-          <div className="h-full flex-grow flex items-center justify-center">
-            <span className="text-[#ccc] text-sm font-sans font-bold">iain.website -- remote access</span>
-          </div>
-        </div>
-
-        <Chat closeChat={() => doFadeOut()} />
-      </div>
+      <Chat closeChat={() => doFadeOut()} className="w-[800px] max-w-[80vw] h-[600px] max-h-[80vh] ml-[10vw] mt-[10vh]" />
 
       {/* Home icon */}
       <div 
@@ -51,8 +38,9 @@ export default function ChatOverlay() {
           alt="Home icon"
           width={63}
           height={58}
+          className="opacity-90"
         />
-        <span className="text-white font-sans text-sm pl-[16px] -mt-1 font-bold">home</span>
+        <span className="text-gray-300 font-sans text-sm pl-[16px] -mt-1 font-bold">home</span>
       </div>
 
       {/* Warning icon */}
@@ -65,8 +53,9 @@ export default function ChatOverlay() {
           alt="Warning icon"
           width={58}
           height={58}
+          className="opacity-90"
         />
-        <span className="text-white font-sans text-sm mt-1 font-bold">warning</span>
+        <span className="text-gray-300 font-sans text-sm mt-1 font-bold">warning</span>
       </div>
 
       {showWarning && (

@@ -60,7 +60,7 @@ const CharacterCycle = memo(({ char, shouldShiver, isHovered }: CharacterCyclePr
       ref={spanRef}
       className={`inline-block will-change-transform hover:scale-110 transition-colors duration-1000`}
       style={{ color: isHovered ? colorLookup[char] || 'white' : '' }}
-      onMouseEnter={triggerCycle}
+      //onMouseEnter={triggerCycle}
     >
       {char}
     </span>
