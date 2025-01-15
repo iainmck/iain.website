@@ -9,11 +9,11 @@ const CYCLE_COUNT = 7;
 interface CharacterCycleProps {
   char: string;
   shouldShiver: boolean;
-  isHovered?: boolean;
+  colorize?: boolean;
 }
 
 // Memoize the CharacterCycle component
-const CharacterCycle = memo(({ char, shouldShiver, isHovered }: CharacterCycleProps) => {
+const CharacterCycle = memo(({ char, shouldShiver, colorize }: CharacterCycleProps) => {
   const spanRef = useRef<HTMLSpanElement>(null);
   
   const triggerCycle = () => {
@@ -59,7 +59,7 @@ const CharacterCycle = memo(({ char, shouldShiver, isHovered }: CharacterCyclePr
     <span
       ref={spanRef}
       className={`inline-block will-change-transform hover:scale-110 transition-colors duration-1000`}
-      style={{ color: isHovered ? colorLookup[char] || 'white' : '' }}
+      style={{ color: colorize ? colorLookup[char] || 'white' : '' }}
       //onMouseEnter={triggerCycle}
     >
       {char}

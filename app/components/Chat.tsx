@@ -116,7 +116,11 @@ export default function Chat({ className }: { className?: string }) {
   }, [pathname])
 
   return (
-    <div className={`${className} bg-[#1e1e1e] rounded-[12px] border-[1px] border-[#999] shadow-[0_8px_6px_-1px_rgba(0,0,0,0.5)] ${hideChat ? 'opacity-0 scale-[0.9] pointer-events-none' : 'opacity-100 scale-100'} transition-all duration-700 origin-center`}>
+    <div className={`
+      ${className} bg-[#1e1e1e] rounded-[12px] border-[1px] border-[#999] shadow-[0_8px_6px_-1px_rgba(0,0,0,0.5)] 
+      ${hideChat ? 'opacity-0 scale-[0.9] pointer-events-none' : 'opacity-100 scale-100'} transition-all duration-700 origin-center
+      hidden md:block
+    `}>
       <div className="h-[30px] bg-[#36363B] rounded-t-[12px] border-b border-black flex relative">
         <div className="absolute left-2 h-full flex items-center gap-2 group" onClick={() => setHideChat(true)}>
           <div className="w-[12px] h-[12px] rounded-full bg-[#FF5F57] group-hover:bg-[#ff8d88] cursor-pointer" />

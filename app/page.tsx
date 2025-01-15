@@ -7,8 +7,6 @@ import { useState } from 'react';
 import Chat from './components/Chat';
 
 export default function Home() {
-  const [isHovered, setIsHovered] = useState(false)
-
   return (
     <div className="h-full animate-fade-in">
       <div className="relative">
@@ -25,7 +23,7 @@ export default function Home() {
                     key={`${lineIndex}-${charIndex}`} 
                     char={char} 
                     shouldShiver={Math.random() < 0.01}
-                    //isHovered={isHovered}
+                    //colorize={false}
                   />
                 )
               ))}
@@ -39,16 +37,12 @@ export default function Home() {
             <Link 
               href="/projects" 
               className="text-xl hover:underline bg-[#588069] px-1 transform transition-transform hover:scale-[1.1] origin-center"
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
             >
               projects
             </Link>
             <Link 
               href="/music" 
               className="text-xl hover:underline bg-[#b08383] px-1 transform transition-transform hover:scale-[1.1] origin-center"
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
             >
               music
             </Link>
