@@ -17,6 +17,7 @@ export default function Chat({ className }: { className?: string }) {
   const [isFakeLoading, setIsFakeLoading] = useState(false)
   const isFirstMessage = useRef(true)
   const [isShowingOptions, setIsShowingOptions] = useState(false)
+  const messagesContainerRef = useRef<HTMLDivElement>(null)
 
   const { messages, setMessages, input, handleInputChange, handleSubmit: originalHandleSubmit, isLoading } = useChat({
     api: '/api/chat',
@@ -45,9 +46,11 @@ export default function Chat({ className }: { className?: string }) {
       content: '',
     }])
 
+    const words = question.split(' ')
     let currentIndex = 0
+    
     const interval = setInterval(() => {
-      if (currentIndex >= question.length) {
+      if (currentIndex >= words.length) {
         setIsFakeLoading(false)
         clearInterval(interval)
         callback?.()
@@ -58,12 +61,15 @@ export default function Chat({ className }: { className?: string }) {
         const lastMessage = prev[prev.length - 1]
         return [
           ...prev.slice(0, -1),
-          { ...lastMessage, content: question.slice(0, currentIndex + 1) }
+          { 
+            ...lastMessage, 
+            content: [...words.slice(0, currentIndex + 1)].join(' ')
+          }
         ]
       })
 
       currentIndex++
-    }, 20)
+    }, 100) // Increased delay for word-by-word animation
   }
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
@@ -96,7 +102,7 @@ export default function Chat({ className }: { className?: string }) {
       if (!!data?.city) {
         presentQuestion(`${locationQuestions[Math.floor(Math.random() * locationQuestions.length)]} ${data.city.toLowerCase()}?`)
       } else {
-        presentQuestion('ask me anything... what i\'ve been coding, my favourite food, etc.')
+        presentQuestion('ask me anything... what i\'ve been coding, eating, why i spell my name lowercase, etc.')
       }
     }
   }
@@ -116,11 +122,17 @@ export default function Chat({ className }: { className?: string }) {
     }
   }, [pathname])
 
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight
+    }
+  }, [messages]) // could also add showOptions if needed
+
   return (
     <div className={`
       ${className} bg-[#1e1e1e] rounded-[12px] border-[1px] border-[#999] shadow-[0_8px_6px_-1px_rgba(0,0,0,0.5)] 
       ${hideChat ? 'opacity-0 scale-[0.9] pointer-events-none' : 'opacity-100 scale-100'} transition-all duration-700 origin-center
-      hidden md:block
+      hidden md:block flex flex-col
     `}>
       <div className="h-[30px] bg-[#36363B] rounded-t-[12px] border-b border-black flex relative">
         <div className="absolute left-2 h-full flex items-center gap-2 group" onClick={() => setHideChat(true)}>
@@ -134,7 +146,8 @@ export default function Chat({ className }: { className?: string }) {
       </div>
 
       <div 
-        className="w-full h-full flex flex-col justify-start px-3 py-2 text-sm"
+        ref={messagesContainerRef}
+        className="w-full h-[calc(100%-30px)] overflow-y-scroll flex flex-col justify-start px-3 py-2 text-sm"
         onClick={() => inputRef.current?.focus()}
       >
         <div>

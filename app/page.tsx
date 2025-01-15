@@ -51,7 +51,7 @@ export default function Home() {
       </div>
       
       <p className="fixed bottom-0 left-0 right-0 bg-background p-2 z-2 text-sm">
-        iain is not a developer. i mean yeah he codes <Link href="/projects" className='font-bold'>fullstack apps</Link>. but he thinks bigger, about people, products, systems. what is success? how do we iteratively build & measure? is the product cool? and why are there two i&apos;s in his name? who knows. but he uses lowercase so people don&apos;t call him lain. 
+        iain is not a developer. yeah he codes <Link href="/projects" className='font-bold'>fullstack apps</Link>. but he thinks bigger, about people, products, systems. what is success? how do we iteratively build & measure? is the product cool? and why are there two i&apos;s in his name? who knows. 
       </p>
     </div>
   )

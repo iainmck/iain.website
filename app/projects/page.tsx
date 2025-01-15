@@ -16,8 +16,8 @@ export default function Projects() {
   }
 
   return (
-    <div className="h-full animate-fade-in">
-      <div className="overflow-hidden mt-5 md:mt-20 flex-col items-center" ref={emblaRef}>
+    <div className="h-full animate-fade-in flex items-center">
+      <div className="overflow-hidden flex-col justify-center items-center" ref={emblaRef}>
         <div className="flex gap-10">
           {projects.map((project, index) => (
             <div 
@@ -51,57 +51,6 @@ export default function Projects() {
   )
 }
 
-const projects: ProjectCardProps[] = [
-  {
-    tagline: 'AI voice recorder & memory',
-    titleImage: 'spacebar-title.png',
-    titleHeightAdjust: -5,
-    description: 'Too long, didn\'t listen. Spacebar listens to conversations for you, turning them into beautifully organized records for later.',
-    colorBg: '#3D05DD',
-    colorFg: '#FCB0F3',
-    link: 'https://spacebar.fm',
-    background: <div className="w-full h-full flex items-start justify-end opacity-70">
-        <Image src="/images/spacebar-hero.jpg" alt="" width={360} height={300} className="z-10 mr-2 mt-20 scale-50 md:scale-100 origin-top-right" />
-        <div className="absolute inset-0 bg-black rounded-[20px]" />
-    </div>,
-  },
-  {
-    tagline: 'Family biographer',
-    titleImage: 'memoir-title.png',
-    titleHeightAdjust: -10,
-    description: 'Your grandma deserves a wiki page. Record stories about the important people in you life, and automatically build living memoirs that will last forever.',
-    colorBg: '#92261A',
-    colorFg: '#F0B961',
-    link: 'https://heymemoir.com',
-    background: <div className="w-full flex justify-end opacity-90">
-        <Image src="/images/memoir-hero.png" alt="" width={180} height={180} className="z-10 mt-10 mr-5 md:mr-10 rotate-[10deg] scale-75 md:scale-100 origin-top-right" />
-    </div>,
-  },
-  {
-    tagline: 'Opinionated chatbot',
-    titleImage: 'dinnerparty-title.png',
-    titleMarginAdjust: -15,
-    description: 'Ugh. Chatbots give the same sterile, generic answers. Dinner Party is different. We forced AI to take divisive stances, drawing on the greatest thinkers of all time.',
-    colorBg: '#0D2231',
-    colorFg: '#3A98DC',
-    link: 'https://party.spacebar.fm',
-    background: <div className="w-full flex justify-end opacity-90">
-        <Image src="/images/dinnerparty-hero.png" alt="" width={250} height={200} className="mt-20 mr-5 md:mr-10 scale-90 md:scale-100 origin-top-right" />
-    </div>,
-  },
-  {
-    tagline: 'Remix your reality',
-    titleImage: 'iris-title.png',
-    description: 'Re-imagine any scene using AI img2img, all packed into a dead-simple social app. Now turn all my friends into goth clowns.',
-    colorBg: '#30312D',
-    colorFg: '#70993E',
-    link: '',
-    background: <div className="w-full flex justify-end opacity-90">
-        <Image src="/images/iris-hero.png" alt="" width={320} height={200} className="mt-10 mr-5 md:mr-10 scale-75 md:scale-100 origin-right" />
-    </div>,
-  },
-]
-
 interface ProjectCardProps {
   tagline: string
   titleImage: string
@@ -117,7 +66,7 @@ interface ProjectCardProps {
 function ProjectCard(props: ProjectCardProps & { index: number }) {
   return (
     <div 
-      className="w-[min(600px,90vw)] h-[60vh] md:h-[600px] rounded-[20px] relative font-sans tracking-[-0.03em] select-none" 
+      className="w-[min(600px,90vw)] h-[calc(100vh-150px)] flex-grow max-h-[600px] rounded-[20px] relative font-sans tracking-[-0.03em] select-none" 
       style={{ backgroundColor: props.colorBg, color: props.colorFg }}
     >
       {/* Background layer */}
@@ -130,7 +79,7 @@ function ProjectCard(props: ProjectCardProps & { index: number }) {
         <p className="text-sm font-extralight">00{props.index + 1}</p>
         <h1 className="text-sm">{props.tagline}</h1>
         
-        <div className="flex-grow" /> {/* spacer */}
+        <div className="flex-[2]" /> {/* spacer */}
 
         <Image 
           src={`/images/${props.titleImage}`} 
@@ -138,25 +87,112 @@ function ProjectCard(props: ProjectCardProps & { index: number }) {
           width={500}
           height={100}
           className="w-auto h-auto" 
+          loading="eager"
+          priority={props.index === 0}
           style={{ 
             marginBottom: `${props.titleMarginAdjust || 0}px`,
             maxHeight: `${90 + (props.titleHeightAdjust || 0)}px`,
           }}
         />
-        <h1 className="text-base mb-20 mt-6 max-w-[370px] leading-[1.2]">
+        <h1 className="text-base mt-6 max-w-[370px] leading-[1.2]">
           {props.description}
         </h1>
 
-        <a 
-          href={props.link} 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          style={{ backgroundColor: props.colorFg }}
-          className="inline-block py-[5px] px-[16px] rounded-full text-[18px] text-black/60 border border-black/10 transition-opacity hover:opacity-80"
-        >
-          Try it out
-        </a>
+        <div className="flex-1" /> {/* spacer */}
+
+        {props.link ? (
+          <a 
+            href={props.link} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            style={{ backgroundColor: props.colorFg }}
+            className="inline-block py-[5px] px-[16px] rounded-full text-[18px] text-black/60 border border-black/10 transition-opacity hover:opacity-80"
+          >
+            Try it out
+          </a>
+        ) : (
+          <p className="text-sm">temporarily offline</p>
+        )}
       </div>
     </div>
   )
 }
+
+const projects: ProjectCardProps[] = [
+  {
+    tagline: 'AI voice recorder & memory',
+    titleImage: 'spacebar-title.png',
+    titleHeightAdjust: -5,
+    description: 'Too long, didn\'t listen. Spacebar listens to conversations for you, turning them into beautifully organized records for later.',
+    colorBg: '#3D05DD',
+    colorFg: '#FCB0F3',
+    link: 'https://spacebar.fm',
+    background: <div className="w-full h-full flex items-start justify-end opacity-70">
+      <Image 
+        src="/images/spacebar-hero.jpg" 
+        alt="" 
+        width={360} 
+        height={300} 
+        loading="eager"
+        className="z-10 mr-2 mt-5 md:mt-20 scale-75 md:scale-100 origin-top-right" 
+      />
+      <div className="absolute inset-0 bg-black rounded-[20px]" />
+    </div>,
+  },
+  {
+    tagline: 'AI family biographer',
+    titleImage: 'memoir-title.png',
+    titleHeightAdjust: -10,
+    description: 'Your grandma deserves a wiki page. Record stories about the important people in you life, and automatically build living memoirs that will last forever.',
+    colorBg: '#92261A',
+    colorFg: '#F0B961',
+    link: 'https://heymemoir.com',
+    background: <div className="w-full flex justify-end opacity-90">
+      <Image 
+        src="/images/memoir-hero.png" 
+        alt="" 
+        width={180} 
+        height={180} 
+        loading="eager"
+        className="z-10 mt-10 mr-5 md:mr-10 rotate-[10deg] scale-75 md:scale-100 origin-top-right" 
+      />
+    </div>,
+  },
+  {
+    tagline: 'Opinionated chatbot',
+    titleImage: 'dinnerparty-title.png',
+    titleMarginAdjust: -15,
+    description: 'Ugh. Chatbots give the same sterile, generic answers. Dinner Party is different. We forced AI to take divisive stances, drawing on the greatest thinkers of all time.',
+    colorBg: '#0D2231',
+    colorFg: '#3A98DC',
+    link: 'https://party.spacebar.fm',
+    background: <div className="w-full flex justify-end opacity-90">
+      <Image 
+        src="/images/dinnerparty-hero.png" 
+        alt="" 
+        width={250} 
+        height={200} 
+        loading="eager"
+        className="mt-14 md:mt-20 mr-5 md:mr-10 scale-90 md:scale-100 origin-top-right" 
+      />
+    </div>,
+  },
+  {
+    tagline: 'Social image transformer',
+    titleImage: 'iris-title.png',
+    description: 'Re-imagine any scene using AI img2img, all packed into a dead-simple social app. Now turn all my friends into goth clowns.',
+    colorBg: '#30312D',
+    colorFg: '#70993E',
+    link: '',
+    background: <div className="w-full flex justify-end opacity-90">
+      <Image 
+        src="/images/iris-hero.png" 
+        alt="" 
+        width={320} 
+        height={200} 
+        loading="eager"
+        className="mt-12 mr-5 md:mr-10 scale-75 md:scale-100 origin-right" 
+      />
+    </div>,
+  },
+]
