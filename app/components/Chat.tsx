@@ -229,7 +229,12 @@ function Options({ onSelect }: { onSelect: (index: number) => void }) {
       {options.map((option, i) => (
         <div key={i} className="w-full flex gap-2">
           <NameBlock name={null} role="assistant" className="opacity-0"/>
-          <p className="whitespace-pre-wrap">&gt; <span className={index === i ? "underline text-[#22C6F8]" : ""}>{option}</span></p>
+          <p 
+            className="whitespace-pre-wrap cursor-pointer"
+            onClick={() => onSelect(i)}
+          >
+            &gt; <span className={index === i ? "underline text-[#22C6F8]" : ""}>{option}</span>
+          </p>
         </div>
       ))}
     </>

@@ -1,6 +1,7 @@
 'use client'
 
 import useEmblaCarousel from 'embla-carousel-react'
+import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
 import Image from 'next/image'
 
 export default function Projects() {
@@ -8,8 +9,8 @@ export default function Projects() {
     align: 'center',
     containScroll: 'trimSnaps',
     slidesToScroll: 1,
-    //dragFree: true
-  })
+    // dragFree: true,
+  }, [WheelGesturesPlugin()])
   
   const scrollTo = (index: number) => {
     if (emblaApi) emblaApi.scrollTo(index)
