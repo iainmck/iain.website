@@ -21,6 +21,19 @@ body {
   cursor: url('/cursor-circle-white.png') 6 6, crosshair;
 }
 
+/* Reset input styles */
+input {
+  all: unset;
+  background: transparent;
+  color: inherit;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* Add custom cursor styles */
 .custom-cursor {
   width: 20px;

@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
+import Chat from './Chat'
 
 export default function ChatOverlay() {
   const [showWarning, setShowWarning] = useState(false)
@@ -37,11 +38,7 @@ export default function ChatOverlay() {
           </div>
         </div>
 
-        <div className="w-full h-full flex flex-col justify-start px-3 py-2 text-sm">
-          <p>Come back in 3 days to chat with an ai version of iain</p>
-          <p>Come back in 3 days to chat with an ai version of iain</p>
-          <p>Come back in 3 days to chat with an ai version of iain</p>
-        </div>
+        <Chat closeChat={() => doFadeOut()} />
       </div>
 
       {/* Home icon */}
@@ -74,10 +71,10 @@ export default function ChatOverlay() {
 
       {showWarning && (
         <div 
-          className="fixed inset-0 z-30 flex items-center justify-center"
+          className="fixed inset-0 z-30 flex items-center justify-end"
           onClick={() => setShowWarning(false)}
         >
-          <div className="w-[300px] h-[300px] bg-[#fff9b1] shadow-[0_8px_16px_-2px_rgba(0,0,0,0.8)] p-6 rotate-2 cursor-default">
+          <div className="w-[300px] h-[300px] mr-[10vw] bg-[#fff9b1] shadow-[0_8px_16px_-2px_rgba(0,0,0,0.8)] p-6 rotate-2 cursor-default">
             <p className="font-handwritten text-lg text-gray-800">
               ⚠️ if you get my chatbot to say some crazy shi* please tweet <a href="https://x.com/iainxyz" className="font-bold">@iainxyz</a> so we can all laugh
             </p>
