@@ -107,16 +107,25 @@ export default function Chat({ className }: { className?: string }) {
     }
   }
 
-  // ON VIEW LOAD
+  // VIEW MANAGEMENT
+  const [hideChat, setHideChat] = useState(false)
+  const [initialLoad, setInitialLoad] = useState(true)
+
   useEffect(() => {
-    setTimeout(() => {
-      presentQuestion(nameQuestions[Math.floor(Math.random() * nameQuestions.length)])
-    }, 2000)
+    // Handle initial fade in
+    const timer = setTimeout(() => {
+      setInitialLoad(false)
+      setTimeout(() => {
+        presentQuestion(nameQuestions[Math.floor(Math.random() * nameQuestions.length)])
+      }, 1000)
+    }, 1750)
+
+    return () => clearTimeout(timer)
   }, [])
 
-  const [hideChat, setHideChat] = useState(false)
   useEffect(() => {
     setHideChat(pathname !== '/')
+
     if (pathname === '/') {
       inputRef.current?.focus()
     }
@@ -131,7 +140,7 @@ export default function Chat({ className }: { className?: string }) {
   return (
     <div className={`
       ${className} bg-[#1e1e1e] rounded-[12px] border-[1px] border-[#999] shadow-[0_8px_6px_-1px_rgba(0,0,0,0.5)] 
-      ${hideChat ? 'opacity-0 scale-[0.9] pointer-events-none' : 'opacity-100 scale-100'} transition-all duration-700 origin-center
+      ${hideChat || initialLoad ? 'opacity-0 scale-[0.9] pointer-events-none' : 'opacity-100 scale-100'} transition-all duration-700 origin-center
       hidden md:block flex flex-col
     `}>
       <div className="h-[30px] bg-[#36363B] rounded-t-[12px] border-b border-black flex relative">
