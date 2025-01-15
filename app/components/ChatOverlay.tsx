@@ -26,7 +26,7 @@ export default function ChatOverlay() {
         transition-all duration-1000 origin-center`
       }
     >
-      <Chat closeChat={() => doFadeOut()} className="w-[800px] max-w-[80vw] h-[600px] max-h-[80vh] ml-[10vw] mt-[10vh]" />
+      <Chat className="w-[800px] max-w-[80vw] h-[600px] max-h-[80vh] ml-[10vw] mt-[10vh]" />
 
       {/* Home icon */}
       <div 
