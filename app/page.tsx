@@ -59,14 +59,14 @@ export default function Home() {
         <p className="text-sm flex-grow">
           iain is not a developer. yeah he codes <Link href="/projects" className='font-bold'>fullstack apps</Link>. but he thinks bigger, about people, products, systems. what is success? how do we iteratively build & measure? is the product cool? and why are there two i&apos;s in his name? who knows.
         </p>
-        <button 
+        {/* <button 
           onClick={() => setAnimationsEnabled(!animationsEnabled)}
           className={`${animationsEnabled ? 'bg-foreground text-background' : ''} 
             opacity-30 bg-background border border-foreground px-3 py-1 rounded-full text-xs whitespace-nowrap hover:bg-foreground hover:text-background transition-colors
           `}
         >
           sparkle
-        </button>
+        </button> */}
       </div>
     </div>
   )

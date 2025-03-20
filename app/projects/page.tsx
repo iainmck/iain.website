@@ -62,6 +62,7 @@ interface ProjectCardProps {
   colorFg: string
   link: string
   background: React.ReactNode
+  showCreds?: boolean
 }
 
 function ProjectCard(props: ProjectCardProps & { index: number }) {
@@ -100,20 +101,28 @@ function ProjectCard(props: ProjectCardProps & { index: number }) {
         </h1>
 
         <div className="flex-1" /> {/* spacer */}
+        
+        <div className="flex items-center">
+          {props.link ? (
+            <a 
+              href={props.link} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              style={{ backgroundColor: props.colorFg }}
+              className="inline-block py-[5px] px-[16px] rounded-full text-[18px] text-black/60 border border-black/10 transition-opacity hover:opacity-80"
+            >
+              Try it out
+            </a>
+          ) : (
+            <p className="text-sm">temporarily offline</p>
+          )}
 
-        {props.link ? (
-          <a 
-            href={props.link} 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            style={{ backgroundColor: props.colorFg }}
-            className="inline-block py-[5px] px-[16px] rounded-full text-[18px] text-black/60 border border-black/10 transition-opacity hover:opacity-80"
-          >
-            Try it out
-          </a>
-        ) : (
-          <p className="text-sm">temporarily offline</p>
-        )}
+          {props.showCreds && (
+            <p className="ml-3 text-[12px] opacity-80">
+              u: guest@user.com<br/>p: password
+            </p>
+          )}
+        </div>
       </div>
     </div>
   )
@@ -139,6 +148,25 @@ const projects: ProjectCardProps[] = [
       />
       <div className="absolute inset-0 bg-black rounded-[20px]" />
     </div>,
+  },
+  {
+    tagline: 'Universal image recognition',
+    titleImage: 'harvest-title.png',
+    description: 'Magically pulls all the goodies from your photo library. Instagram screenshots become Spotify playlists, saved Google places, Letterboxd lists...',
+    colorBg: '#30312D',
+    colorFg: '#70993E',
+    link: 'https://garden.harvestit.com',
+    background: <div className="w-full flex justify-end opacity-90">
+      <Image 
+        src="/images/harvest-hero.png" 
+        alt="" 
+        width={260} 
+        height={50} 
+        loading="eager"
+        className="mt-20 md:mt-12 mr-5 md:mr-10 scale-90 md:scale-100 origin-right" 
+      />
+    </div>,
+    showCreds: true,
   },
   {
     tagline: 'AI family biographer',
@@ -175,24 +203,6 @@ const projects: ProjectCardProps[] = [
         height={200} 
         loading="eager"
         className="mt-14 md:mt-20 mr-5 md:mr-10 scale-90 md:scale-100 origin-top-right" 
-      />
-    </div>,
-  },
-  {
-    tagline: 'Social image transformer',
-    titleImage: 'iris-title.png',
-    description: 'Re-imagine any scene using AI img2img, all packed into a dead-simple social app. Now turn all my friends into goth clowns.',
-    colorBg: '#30312D',
-    colorFg: '#70993E',
-    link: '',
-    background: <div className="w-full flex justify-end opacity-90">
-      <Image 
-        src="/images/iris-hero.png" 
-        alt="" 
-        width={320} 
-        height={200} 
-        loading="eager"
-        className="mt-12 mr-5 md:mr-10 scale-75 md:scale-100 origin-right" 
       />
     </div>,
   },
