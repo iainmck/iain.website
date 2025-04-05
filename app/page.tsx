@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { asciiArt } from './components/ascii'
 import CharacterCycle from './components/CharacterCycle';
 import { useState } from 'react';
-import Chat from './components/Chat';
 
 export default function Home() {
   const [animationsEnabled, setAnimationsEnabled] = useState(false);

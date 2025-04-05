@@ -13,16 +13,21 @@ export default function Header() {
     }
   }
 
+  const isMSI = pathname === '/msi'
+  const title = isMSI ? 'mckenzie software inc.' : 'iain mckenzie'
+
   return (
     <header className="flex justify-between items-center p-4">
       <Link href="/" onClick={handleHomeClick}>
-        <h1 className="text-2xl md:text-3xl">iain mckenzie</h1>
+        <h1 className="text-2xl md:text-3xl">{title}</h1>
       </Link>
 
-      <nav className="gap-10 hidden md:flex text-lg">
-        <Link href="/projects" className={pathname === '/projects' ? 'underline' : ''}>projects</Link>
-        <Link href="/music" className={pathname === '/music' ? 'underline' : ''}>music</Link>
-      </nav>
+      {!isMSI && (
+        <nav className="gap-10 hidden md:flex text-lg">
+          <Link href="/projects" className={pathname === '/projects' ? 'underline' : ''}>projects</Link>
+          <Link href="/music" className={pathname === '/music' ? 'underline' : ''}>music</Link>
+        </nav>
+      )}
     </header>
   )
 }
