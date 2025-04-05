@@ -11,7 +11,7 @@ export default function LoadingOverlay() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false)
-    }, 1500)
+    }, 1200)
 
     let imageInterval: NodeJS.Timeout | null = null;
     if (loading) {

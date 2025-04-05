@@ -84,7 +84,7 @@ export default function Chat({ className }: { className?: string }) {
 
     originalHandleSubmit(e, { body: { isFirstMessage: isFirstMessage.current } })
     if (isFirstMessage.current) {
-      setName(input)
+      setName(input.slice(0, 20))
     }
   }
 
@@ -101,12 +101,20 @@ export default function Chat({ className }: { className?: string }) {
     } else {
       setIsShowingOptions(false)
       setIsFakeLoading(true)
+
+      const genericQuestion = 'ask me anything... what i\'ve been coding, eating, why i spell my name lowercase, etc.'
+
       const location = await fetch('/api/location')
-      const data = await location.json()
-      if (!!data?.city) {
-        presentQuestion(`${locationQuestions[Math.floor(Math.random() * locationQuestions.length)]} ${data.city.toLowerCase()}?`)
-      } else {
-        presentQuestion('ask me anything... what i\'ve been coding, eating, why i spell my name lowercase, etc.')
+      try {
+        const data = await location.json()
+        if (!!data?.city) {
+          presentQuestion(`${locationQuestions[Math.floor(Math.random() * locationQuestions.length)]} ${data.city.toLowerCase()}?`)
+        } else {
+          presentQuestion(genericQuestion)
+        }
+      } catch (error) {
+        console.error('Error in getting location:', error)
+        presentQuestion(genericQuestion)
       }
     }
   }
