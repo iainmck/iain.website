@@ -46,7 +46,7 @@ export default function Projects() {
         alt=""
         width={400}
         height={200}
-        className="absolute bottom-0 -left-10 hidden lg:block"
+        className="absolute bottom-0 -left-10 hidden lg:block pointer-events-none"
       />
     </div>
   )

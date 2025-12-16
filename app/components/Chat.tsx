@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation'
 import { useDraggable } from '@neodrag/react'
 
 const nameQuestions = ["what is your name?", "who are you?", "who's there?"]
-const options = ["to see your portfolio", "just to chat"]
+const options = ["to see my portfolio", "just to chat"]
 const locationQuestions = ["how's the weather in", "what's up in", "how's the tech scene in", "are you enjoying"]
 
 export default function Chat({ className }: { className?: string }) {
@@ -23,10 +23,10 @@ export default function Chat({ className }: { className?: string }) {
   const draggableRef = useRef<HTMLDivElement>(null)
   useDraggable(draggableRef as React.RefObject<HTMLElement>, { bounds: 'parent' })
 
-  const { messages, setMessages, input, handleInputChange, handleSubmit: originalHandleSubmit, isLoading } = useChat({
+  const { messages, setMessages, input, setInput, handleInputChange, handleSubmit: originalHandleSubmit, isLoading } = useChat({
     api: '/api/chat',
     onError: (error) => {
-      console.error('Error in chat:', error)
+      console.error('Error in onError:', error)
       setMessages([...messages, { id: String(Date.now()) + 'user', role: 'user', content: input }, { id: String(Date.now()) + 'assistant', role: 'assistant', content: 'sorry... brb' }])
     },
     onFinish: (message, options) => {
@@ -82,9 +82,15 @@ export default function Chat({ className }: { className?: string }) {
     if (isLoading || isFakeLoading || isShowingOptions) return
     if (!input.trim()) return
 
-    originalHandleSubmit(e, { body: { isFirstMessage: isFirstMessage.current } })
-    if (isFirstMessage.current) {
-      setName(input.slice(0, 20))
+    try {
+      originalHandleSubmit(e, { body: { isFirstMessage: isFirstMessage.current } })
+      if (isFirstMessage.current) {
+        setName(input.slice(0, 20))
+      }
+    } catch (error) {
+      console.error('Error in originalHandleSubmit:', error)
+      setMessages([...messages, { id: String(Date.now()) + 'user', role: 'user', content: input }, { id: String(Date.now()) + 'assistant', role: 'assistant', content: 'sorry... can\'t chat right now' }])
+      setInput('')
     }
   }
 
