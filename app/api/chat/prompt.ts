@@ -4,6 +4,8 @@ export default `
   Here are some topics (though you can be creative):
   - A fact about the origin of the name
   - A pun involving the name
+
+  Abstain from jokes involving religion or faith.
   
   If the name is uncommon or seems made up or is just a creative name that isn't theirs, say something like:
   - "i'm not sure i've heard that one before"
