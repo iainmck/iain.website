@@ -1,4 +1,4 @@
-import { streamText } from 'ai'
+import { streamText, convertToModelMessages } from 'ai'
 
 import { model } from '../config'
 import promptName from './prompt'
@@ -15,8 +15,8 @@ export async function POST(req: Request) {
   const result = streamText({
     model,
     system: isFirstMessage ? promptName : promptChat,
-    messages: lastMessages,
-    maxTokens: 250,
+    messages: convertToModelMessages(lastMessages),
+    maxOutputTokens: 250,
     onFinish(event) {
       try {
         trace(
@@ -31,10 +31,12 @@ export async function POST(req: Request) {
     },
   })
 
-  return result.toDataStreamResponse({ getErrorMessage(error) {
-    console.log('getErrorMessage', error)
-    return 'error'
-  }, })
+  return result.toUIMessageStreamResponse({ 
+    onError: (error) => {
+      console.log('getErrorMessage', error)
+      return 'error'
+    },
+  })
 }
 
 interface TraceInput {

@@ -1,10 +1,12 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { useChat, Message } from 'ai/react'
+import { useChat } from '@ai-sdk/react'
 import { useRouter } from 'next/navigation'
 import { usePathname } from 'next/navigation'
 import { useDraggable } from '@neodrag/react'
+import { type UIMessage, DefaultChatTransport } from 'ai'
+import LoadingDots from './LoadingDots'
 
 const nameQuestions = ["what is your name?", "who are you?", "who's there?"]
 const options = ["to see my portfolio", "just to chat"]
@@ -23,13 +25,19 @@ export default function Chat({ className }: { className?: string }) {
   const draggableRef = useRef<HTMLDivElement>(null)
   useDraggable(draggableRef as React.RefObject<HTMLElement>, { bounds: 'parent' })
 
-  const { messages, setMessages, input, setInput, handleInputChange, handleSubmit: originalHandleSubmit, isLoading } = useChat({
-    api: '/api/chat',
+  const [input, setInput] = useState('');
+
+  const { messages, setMessages, sendMessage, status } = useChat({
+    transport: new DefaultChatTransport({ api: '/api/chat' }),
     onError: (error) => {
       console.error('Error in onError:', error)
-      setMessages([...messages, { id: String(Date.now()) + 'user', role: 'user', content: input }, { id: String(Date.now()) + 'assistant', role: 'assistant', content: 'sorry... brb' }])
+      setMessages([
+        ...messages, 
+        { id: String(Date.now()) + 'user', role: 'user', parts: [{ type: 'text', text: input }] }, 
+        { id: String(Date.now()) + 'assistant', role: 'assistant', parts: [{ type: 'text', text: 'sorry... brb' }] },
+      ])
     },
-    onFinish: (message, options) => {
+    onFinish: () => {
       const didJustSendFirstMessage = isFirstMessage.current
       isFirstMessage.current = false
       
@@ -47,7 +55,7 @@ export default function Chat({ className }: { className?: string }) {
     setMessages(prev => [...prev, { 
       id: String(Date.now()), 
       role: 'assistant', 
-      content: '',
+      parts: [{ type: 'text', text: '' }],
     }])
 
     const words = question.split(' ')
@@ -67,7 +75,7 @@ export default function Chat({ className }: { className?: string }) {
           ...prev.slice(0, -1),
           { 
             ...lastMessage, 
-            content: [...words.slice(0, currentIndex + 1)].join(' ')
+            parts: [{ type: 'text', text: [...words.slice(0, currentIndex + 1)].join(' ') }],
           }
         ]
       })
@@ -76,29 +84,35 @@ export default function Chat({ className }: { className?: string }) {
     }, 100) // Increased delay for word-by-word animation
   }
 
+  const isBusy = status === 'submitted' || status === 'streaming' || isFakeLoading || isShowingOptions
+
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault()
 
-    if (isLoading || isFakeLoading || isShowingOptions) return
+    if (isBusy) return
     if (!input.trim()) return
 
     try {
-      originalHandleSubmit(e, { body: { isFirstMessage: isFirstMessage.current } })
+      sendMessage({ text: input }, { body: { isFirstMessage: isFirstMessage.current } })
       if (isFirstMessage.current) {
         setName(input.slice(0, 20))
       }
     } catch (error) {
       console.error('Error in originalHandleSubmit:', error)
-      setMessages([...messages, { id: String(Date.now()) + 'user', role: 'user', content: input }, { id: String(Date.now()) + 'assistant', role: 'assistant', content: 'sorry... can\'t chat right now' }])
-      setInput('')
+      setMessages([
+        ...messages, 
+        { id: String(Date.now()) + 'user', role: 'user', parts: [{ type: 'text', text: input }] }, 
+        { id: String(Date.now()) + 'assistant', role: 'assistant', parts: [{ type: 'text', text: 'sorry... can\'t chat right now' }] },
+      ])
     }
+    setInput('')
   }
 
   async function handleSubmitOption(index: number) {
     setMessages(prev => {
       return [
         ...prev,
-        { id: String(Date.now()), role: 'user', content: options[index] }
+        { id: String(Date.now()), role: 'user', parts: [{ type: 'text', text: options[index] }] }
       ]
     })
 
@@ -184,23 +198,30 @@ export default function Chat({ className }: { className?: string }) {
           {messages.map((m) => (
             <div key={m.id} className="flex gap-2">
               <NameBlock name={name} role={m.role} />
-              <p className="flex-grow whitespace-pre-wrap">
-                {m.content}
-              </p>
+              <div>
+                {m.parts.map((part, idx) => (
+                  <span key={part.type + idx}>
+                    {part.type === 'text' ? part.text : null}
+                  </span>
+                ))}
+              </div>
             </div>
           ))}
+          {status === 'submitted' ? (
+            <LoadingDots />
+          ) : null}
         </div>
 
         {isShowingOptions && <Options onSelect={handleSubmitOption} />}
         
-        <form onSubmit={handleSubmit} className={`w-full ${(!messages.length || isLoading || isFakeLoading || isShowingOptions) ? 'opacity-0' : 'opacity-100'}`}>
+        <form onSubmit={handleSubmit} className={`w-full ${(!messages.length || isBusy) ? 'opacity-0' : 'opacity-100'}`}>
           <div className="w-full flex gap-2">
             <NameBlock name={name} role="user" />
             <input 
               ref={inputRef}
               className={"flex-grow"}
               value={input} 
-              onChange={handleInputChange}
+              onChange={e => setInput(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   handleSubmit(e)
@@ -214,7 +235,7 @@ export default function Chat({ className }: { className?: string }) {
   )
 }
 
-function NameBlock({ name, role, className }: { name: string | null, role: Message["role"], className?: string }) {
+function NameBlock({ name, role, className }: { name: string | null, role: UIMessage["role"], className?: string }) {
   return (
     <p className={`whitespace-nowrap ${role === 'user' ? 'text-[#22C6F8]' : 'text-[#F6A31E]'} ${className}`}>
       {role === 'user' ? (name ?? 'you') : 'iain'}
